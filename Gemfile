@@ -19,7 +19,7 @@ gem "jbuilder"
 
 gem 'nokogiri', '~> 1.16', '>= 1.16.7'
 
-gem 'selenium-devtools', '= 0.127.0'
+gem 'selenium-devtools', '0.128.0'
 
 # Use Redis adapter to run Action Cable in production
 # gem "redis", ">= 4.0.1"}
