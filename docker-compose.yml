@@ -1,0 +1,45 @@
+services:
+  rails:
+    container_name: rails
+    build:
+      context: ./rails
+      dockerfile: Dockerfile
+    ports:
+      - "3000:${RAILS_PORT:-3000}"
+    volumes:
+      - ./rails:/app
+    depends_on:
+      - rails_postgres 
+    environment:
+      DATABASE_NAME: ${DATABASE_NAME:-rails_app}
+      DATABASE_USER: ${DATABASE_USER:-guest}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:-guest}
+      RAILS_ENV: ${RAILS_ENV:-development}
+    networks:
+      - default-network
+    env_file:
+      - .env
+
+  rails_postgres:
+    build: 
+      context: ./postgres
+      dockerfile: Dockerfile
+    restart: always
+    container_name: rails_postgres
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME:-rails_app}
+      POSTGRES_USER: ${DATABASE_USER:-guest}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-guest}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres/data:/var/lib/postgresql/data
+      # - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - default-network
+    env_file:
+      - .env
+
+networks:
+    default-network:
+        driver: bridge
